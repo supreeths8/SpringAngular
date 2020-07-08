@@ -95,6 +95,7 @@ public class MainController {
 	}
 
 	@RequestMapping(value = "/new")
+	
 	public ModelAndView newContact(HttpSession session) {
 		Contact newContact = new Contact();
 		ModelAndView model = new ModelAndView();
