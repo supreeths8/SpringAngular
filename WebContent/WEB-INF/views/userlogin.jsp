@@ -28,8 +28,9 @@
 					<td colspan="2" align="center"><input type="submit" value="Login" /></td>
 				</tr>
 			</table>
-
+			
 		</form>
+			<h3 style="color:red">${message}</h3>
 	</div>
 
 </body>

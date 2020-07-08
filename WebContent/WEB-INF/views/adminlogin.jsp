@@ -13,24 +13,27 @@
 		<h1>Admin Login</h1>
 		<form id="contact" action="index" method="POST">
 			<table>
-			
+
 				<tr>
 					<td>ID</td>
-					<td><input id="name" name="id" type="text"/>
+					<td><input id="name" name="id" type="text" />
 					<td>
 				</tr>
 				<tr>
 					<td>Password</td>
-					<td><input id="password" name="password" type="password"/>
+					<td><input id="password" name="password" type="password" />
 					<td>
-				
 				<tr>
-					<td colspan="2" align="center"><input type="submit" value="Login" /></td>
+					<td colspan="2" align="center"><input type="submit"
+						value="Login" /></td>
 				</tr>
 			</table>
 
 		</form>
+			<h3 style="color:red">${message}</h3>
+
 	</div>
+
 
 </body>
 </html>

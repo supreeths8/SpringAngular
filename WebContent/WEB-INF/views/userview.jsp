@@ -28,19 +28,21 @@
 					<td>${userContact.email}</td>
 					<td>${userContact.address}</td>
 					<td>${userContact.phone}</td>
-					<td>${userContact.balance}</td>
+					<td>${userBalance.amount}</td>
 				</tr>
 			</table>
 		</div>
 		<br>
-
 		<div align="center">
+			<h3 style="color:red">${message}</h3>
+
 			<table>
+
 				<tr>
 					<td colspan="2" align="left"><input type="text"
 						id="withdrawAmount" name="withdrawAmount"></td>
 					<td colspan="2" align="right"><button type="submit"
-							formaction="/ContactManager/withdraw">Withdraw</button></td>
+							formaction="/ContactManager/userview/withdraw">Withdraw</button></td>
 				</tr>
 				<tr>
 					<td></td>
@@ -48,13 +50,14 @@
 						id="depositAmount" name="depositAmount"></td>
 
 					<td colspan="2" align="right"><button type="submit"
-							formaction="/ContactManager/deposit">Deposit</button></td>
+							formaction="/ContactManager/userview/deposit">Deposit</button></td>
 				</tr>
 			</table>
 		</div>
-		<br><br>
+		<br>
+		<br>
 		<div align="center">
-			<button type="submit" formaction="/ContactManager/logout">Logout</button>
+			<button type="submit" formaction="/ContactManager/userlogout">Logout</button>
 
 		</div>
 	</form:form>

@@ -6,18 +6,18 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>New/Edit Contact</title>
+<title>Account Manager</title>
 </head>
 <body>
 	<div align="center">
-		<h1>Edit Contact</h1>
-		<form:form action="update" method="get" modelAttribute="contact">
+		<h1>Edit User Account</h1>
+		<form:form action="update" method="post" modelAttribute="contact">
 			<table>
-				
-			<tr>
+
+				<tr>
 					<td>ID</td>
-					<td><form:input path="id" />
-					<td>
+					<td>${contact.id}<form:hidden path="id" />
+					</td>
 				</tr>
 				<tr>
 					<td>Name</td>
@@ -40,7 +40,13 @@
 					<td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center"><input type="submit" value="Save Changes" /></td>
+					<td>Password</td>
+					<td><form:input path="password" />
+					<td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center"><input type="submit"
+						value="Save Changes" /></td>
 				</tr>
 			</table>
 

@@ -5,12 +5,23 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Contact Manager</title>
+<title>Accounts Manager</title>
 </head>
 <body>
 	<div align="center">
-		<h1>Contacts List</h1>
-		<a href="/ContactManager/new">New Contact</a> <br> <br>
+		<h1>Accounts List</h1>
+		<h2>Customer Search</h2>
+		<form action="search" method="post">
+			<h3 style="color:red">${message}</h3>
+
+			<input type="text" name="keyword" id="keyword"> <input
+				type="submit" value="Search" /> <br> <input type="radio"
+				id="byId" name="byId" value="id"> <label for="byId">By
+				ID</label><br> <br>
+		</form>
+
+		<br> <br> <a href="/ContactManager/new">New Contact</a> <br>
+		<br>
 		<table border="1" cellpadding="3">
 			<tr>
 				<th>ID</th>
@@ -21,16 +32,17 @@
 				<th>Balance</th>
 				<th>Action</th>
 			</tr>
-			<c:forEach var="contact" items="${listContact}">
+			<c:forEach var="contactList" items="${listContact}"
+				varStatus="status">
 				<tr>
-					<td>${contact.id}</td>
-					<td>${contact.name}</td>
-					<td>${contact.email}</td>
-					<td>${contact.address}</td>
-					<td>${contact.phone}</td>
-					<td>${contact.balance}</td>
-					<td><a href="/ContactManager/edit?id=${contact.id}">Edit</a> <a
-						href="/ContactManager/delete?id=${contact.id}">Delete</a></td>
+					<td>${contactList.id}</td>
+					<td>${contactList.name}</td>
+					<td>${contactList.email}</td>
+					<td>${contactList.address}</td>
+					<td>${contactList.phone}</td>
+					<td><c:out value="${listBalance[status.index].amount}" /></td>
+					<td><a href="/ContactManager/edit?id=${contactList.id}">Edit</a>
+						<a href="/ContactManager/delete?id=${contactList.id}">Delete</a></td>
 
 				</tr>
 			</c:forEach>
@@ -41,6 +53,7 @@
 	<form>
 		<div align="center">
 			<button type="submit" formaction="/ContactManager/logout">Logout</button>
+			<button type="submit" formaction="/ContactManager/index">Index</button>
 
 		</div>
 	</form>

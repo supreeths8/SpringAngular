@@ -1,44 +1,49 @@
 package com.evertz.contact.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "contact")
 public class Contact {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "contact_id")
 	private Integer id;
 	private String name;
 	private String email;
 	private String address;
 	private String phone;
 	private String password;
-	private float balance;
-	
 
-	
-	public float getBalance() {
-		return balance;
-	}
-	public void setBalance(float balance) {
-		this.balance = balance;
-	}
 	public String getPassword() {
 		return password;
 	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
 	public Contact() {
-		
+
 	}
+
 	public Contact(Integer id, String name, String email, String address, String phone) {
 		this(name, email, address, phone);
 		this.id = id;
 	}
-	
-	
-	
-	
+
 	@Override
 	public String toString() {
 		return "Contact [id=" + id + ", name=" + name + ", email=" + email + ", address=" + address + ", phone=" + phone
-				+ ", password=" + password + ", balance=" + balance + "]";
+				+ ", password=" + password + "]";
 	}
+
 	public Contact(String name, String email, String address, String phone) {
 		super();
 		this.name = name;
@@ -46,8 +51,9 @@ public class Contact {
 		this.address = address;
 		this.phone = phone;
 	}
-	
-	public Contact(Integer id, String name, String email, String address, String phone, String password, float balance) {
+
+	public Contact(Integer id, String name, String email, String address, String phone, String password,
+			float balance) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -55,7 +61,6 @@ public class Contact {
 		this.address = address;
 		this.phone = phone;
 		this.password = password;
-		this.balance = balance;
 	}
 
 	public Contact(Integer id, String name, String email, String address, String phone, String password) {
@@ -67,7 +72,7 @@ public class Contact {
 		this.phone = phone;
 		this.password = password;
 	}
-	
+
 	public String getPhone() {
 		return phone;
 	}
