@@ -12,7 +12,7 @@ public class Balance {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer contact_id;
-	private float amount;
+	private float amount=0;
 
 	public Balance() {
 		super();

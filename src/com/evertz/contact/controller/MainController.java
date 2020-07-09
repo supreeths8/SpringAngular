@@ -1,5 +1,6 @@
 package com.evertz.contact.controller;
 
+import java.net.http.HttpRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,10 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,11 +34,6 @@ public class MainController {
 
 	@Autowired
 	private BalanceService balanceService;
-
-	@Autowired
-	private Admin admin;
-
-	String msg = "Wrong Credentials";
 
 	public ModelAndView returnIndex(ModelAndView model) {
 		List<Contact> listContact = service.listAll();
@@ -64,38 +63,13 @@ public class MainController {
 		model.setViewName("userlogin");
 		return model;
 	}
-
+////////////////////////////////////////////////////////////////////////////
 	@RequestMapping(value = "/index")
 	public ResponseEntity<List<Contact>> index() {
 		List<Contact> list = service.listAll();
 		return ResponseEntity.ok().body(list);
 		}
-
-	@RequestMapping(value = "/logout")
-	public ModelAndView logout(HttpSession session) {
-		ModelAndView model = new ModelAndView();
-		session.invalidate();
-		model.setViewName("welcome");
-		return model;
-	}
-
-	@RequestMapping(value = "/new")
 	
-	public ModelAndView newContact(HttpSession session) {
-		Contact newContact = new Contact();
-		ModelAndView model = new ModelAndView();
-
-		if (session.getAttribute("admin") != null) {
-			model.addObject(newContact);
-			model.setViewName("contact_form");
-		} else {
-			msg = "Session error";
-			model.setViewName("adminlogin");
-			model.addObject("message", msg);
-		}
-		return model;
-	}
-
 	public void saveFunction(Contact saveContact, Balance saveBalance) {
 		saveBalance.setAmount(0);
 		service.save(saveContact);
@@ -105,50 +79,54 @@ public class MainController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public ResponseEntity<?> save(@RequestBody Contact contact) {
 		service.save(contact);
-		return ResponseEntity.ok().body("OK");
+		balanceService.save(new Balance());
+		return ResponseEntity.ok().body("SAVED");
+	}
+	
+	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
+	public ResponseEntity<Contact> get(@PathVariable("id") int id) {
+		Contact contact = service.get(id);
+		return ResponseEntity.ok().body(contact);
+	}
+	
+
+	@RequestMapping(value = "/edit/{id}")
+	public ResponseEntity<?> edit(@PathVariable("id") int id,@RequestBody Contact contact) {
+		service.update(id, contact);
+		return ResponseEntity.ok().body("UPDATED");
+	}
+	
+
+	@DeleteMapping(value = "/delete/{id}")
+	public ResponseEntity<?> deleteContact(@PathVariable("id") int id) {
+		service.delete(id);
+		return ResponseEntity.ok().body("DELETED");
+	}
+	
+	@RequestMapping(value = "/user/{id}")
+	public ResponseEntity<Contact> getUserData(@PathVariable("id") int id) {
+		Contact contact = service.get(id);
+		return ResponseEntity.ok().body(contact);
+	}
+	@RequestMapping(value = "/user/{id}/balance")
+	public ResponseEntity<Balance> getUserBalance(@PathVariable("id") int id) {
+		Balance bal = balanceService.get(id);
+		return ResponseEntity.ok().body(bal);
 	}
 
-	@RequestMapping(value = "/edit")
-	public ModelAndView editContact(@RequestParam int id, HttpSession session) {
-		ModelAndView model = new ModelAndView();
-		Contact editContact = service.get(id);
-		System.out.println(editContact);
-		if (session.getAttribute("admin") != null) {
-			model.addObject(editContact);
-			model.setViewName("update_form");
-		} else {
-			msg = "Session error";
-			model.setViewName("adminlogin");
-			model.addObject("message", msg);
-		}
 
+///////////////////////////////////////////////////////////////////////////
+
+	@RequestMapping(value = "/logout")
+	public ModelAndView logout(HttpSession session) {
+		ModelAndView model = new ModelAndView();
+		session.invalidate();
+		model.setViewName("welcome");
 		return model;
 	}
-
-	@RequestMapping(value = "/delete")
-	public ModelAndView deleteContact(@RequestParam int id, HttpSession session) {
-		ModelAndView model = new ModelAndView();
-		if (session.getAttribute("admin") != null) {
-			service.delete(id);
-			balanceService.delete(id);
-			model = returnIndex(model);
-		} else {
-			msg = "Session error";
-			model.setViewName("adminlogin");
-			model.addObject("message", msg);
-		}
-
-		return model;
-	}
-
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public ModelAndView updateContact(@ModelAttribute("contact") Contact contact) {
-		ModelAndView model = new ModelAndView();
-		System.out.println(contact);
-		service.save(contact);
-		model = returnIndex(model);
-		return model;
-	}
+	
+	
+	
 
 	@RequestMapping(value = "/userview")
 	public ModelAndView userLogin(HttpServletRequest req, HttpSession userSession) {
