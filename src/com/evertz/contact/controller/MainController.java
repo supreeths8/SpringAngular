@@ -7,8 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -64,27 +66,10 @@ public class MainController {
 	}
 
 	@RequestMapping(value = "/index")
-	public ModelAndView login(HttpServletRequest req, HttpSession session) {
-		ModelAndView model = new ModelAndView();
-		if(session.getAttribute("admin") != null) {
-			model = returnIndex(model);
-			return model;
+	public ResponseEntity<List<Contact>> index() {
+		List<Contact> list = service.listAll();
+		return ResponseEntity.ok().body(list);
 		}
-		admin.setId(req.getParameter("id"));
-		admin.setPassword(req.getParameter("password"));
-		session.setAttribute("admin", admin);
-		if (admin.getId() == null) {
-			model.addObject("message", "Session Error");
-			model.setViewName("adminlogin");
-		} else if (admin.getId().equals("admin") && admin.getPassword().equals("admin")) {
-			model = returnIndex(model);
-		} else {
-			model.addObject("message", msg);
-			model.setViewName("adminlogin");
-		}
-		return model;
-
-	}
 
 	@RequestMapping(value = "/logout")
 	public ModelAndView logout(HttpSession session) {
@@ -118,11 +103,9 @@ public class MainController {
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public ModelAndView saveContact(@ModelAttribute Contact contact, Balance balance) {
-		ModelAndView model = new ModelAndView();
-		saveFunction(contact, balance);
-		model = returnIndex(model);
-		return model;
+	public ResponseEntity<?> save(@RequestBody Contact contact) {
+		service.save(contact);
+		return ResponseEntity.ok().body("OK");
 	}
 
 	@RequestMapping(value = "/edit")
