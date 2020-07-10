@@ -14,7 +14,7 @@ public class Contact {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "contact_id")
-	private Integer id;
+	private Integer contact_id;
 	private String name;
 	private String email;
 	private String address;
@@ -33,14 +33,14 @@ public class Contact {
 
 	}
 
-	public Contact(Integer id, String name, String email, String address, String phone) {
+	public Contact(Integer contact_id, String name, String email, String address, String phone) {
 		this(name, email, address, phone);
-		this.id = id;
+		this.contact_id = contact_id;
 	}
 
 	@Override
 	public String toString() {
-		return "Contact [id=" + id + ", name=" + name + ", email=" + email + ", address=" + address + ", phone=" + phone
+		return "Contact [contact_id=" + contact_id + ", name=" + name + ", email=" + email + ", address=" + address + ", phone=" + phone
 				+ ", password=" + password + "]";
 	}
 
@@ -52,10 +52,10 @@ public class Contact {
 		this.phone = phone;
 	}
 
-	public Contact(Integer id, String name, String email, String address, String phone, String password,
+	public Contact(Integer contact_id, String name, String email, String address, String phone, String password,
 			float balance) {
 		super();
-		this.id = id;
+		this.contact_id = contact_id;
 		this.name = name;
 		this.email = email;
 		this.address = address;
@@ -63,9 +63,9 @@ public class Contact {
 		this.password = password;
 	}
 
-	public Contact(Integer id, String name, String email, String address, String phone, String password) {
+	public Contact(Integer contact_id, String name, String email, String address, String phone, String password) {
 		super();
-		this.id = id;
+		this.contact_id = contact_id;
 		this.name = name;
 		this.email = email;
 		this.address = address;
@@ -82,11 +82,11 @@ public class Contact {
 	}
 
 	public Integer getId() {
-		return id;
+		return contact_id;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setId(Integer contact_id) {
+		this.contact_id = contact_id;
 	}
 
 	public String getName() {
