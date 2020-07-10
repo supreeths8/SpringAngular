@@ -10,10 +10,12 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -63,17 +65,12 @@ public class MainController {
 		model.setViewName("userlogin");
 		return model;
 	}
+
 ////////////////////////////////////////////////////////////////////////////
 	@RequestMapping(value = "/index")
 	public ResponseEntity<List<Contact>> index() {
 		List<Contact> list = service.listAll();
 		return ResponseEntity.ok().body(list);
-		}
-	
-	public void saveFunction(Contact saveContact, Balance saveBalance) {
-		saveBalance.setAmount(0);
-		service.save(saveContact);
-		balanceService.save(saveBalance);
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
@@ -82,38 +79,53 @@ public class MainController {
 		balanceService.save(new Balance());
 		return ResponseEntity.ok().body("SAVED");
 	}
-	
+
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Contact> get(@PathVariable("id") int id) {
 		Contact contact = service.get(id);
 		return ResponseEntity.ok().body(contact);
 	}
-	
 
 	@RequestMapping(value = "/edit/{id}")
-	public ResponseEntity<?> edit(@PathVariable("id") int id,@RequestBody Contact contact) {
+	public ResponseEntity<?> edit(@PathVariable("id") int id, @RequestBody Contact contact) {
 		service.update(id, contact);
 		return ResponseEntity.ok().body("UPDATED");
 	}
-	
 
 	@DeleteMapping(value = "/delete/{id}")
 	public ResponseEntity<?> deleteContact(@PathVariable("id") int id) {
+		balanceService.delete(id);
 		service.delete(id);
 		return ResponseEntity.ok().body("DELETED");
 	}
-	
+
 	@RequestMapping(value = "/user/{id}")
 	public ResponseEntity<Contact> getUserData(@PathVariable("id") int id) {
 		Contact contact = service.get(id);
 		return ResponseEntity.ok().body(contact);
 	}
+
 	@RequestMapping(value = "/user/{id}/balance")
 	public ResponseEntity<Balance> getUserBalance(@PathVariable("id") int id) {
 		Balance bal = balanceService.get(id);
 		return ResponseEntity.ok().body(bal);
 	}
 
+	@RequestMapping(value = "/user/withdraw", method = RequestMethod.POST)
+	public ResponseEntity<?> withdrawl(@RequestBody Balance balance, @RequestBody float toWithdraw) {
+		if (balanceService.withdrawl(balance, toWithdraw) == 1) {
+			return ResponseEntity.ok().body("BALANCE UPDATED");
+		}
+		return ResponseEntity.ok().body("NO");
+	}
+
+	@RequestMapping(value = "/user/deposit", method = RequestMethod.POST)
+	public ResponseEntity<?> deposit(@RequestBody Balance balance) {
+		float toDeposit = 69;
+		balanceService.deposit(balance, toDeposit);
+		return ResponseEntity.ok().body("BALANCE UPDATED");
+	}
+	
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -124,9 +136,6 @@ public class MainController {
 		model.setViewName("welcome");
 		return model;
 	}
-	
-	
-	
 
 	@RequestMapping(value = "/userview")
 	public ModelAndView userLogin(HttpServletRequest req, HttpSession userSession) {
@@ -214,18 +223,18 @@ public class MainController {
 		return model;
 
 	}
-	
+
 	@RequestMapping(value = "/search")
 	public ModelAndView searchIndex(HttpServletRequest req) {
 		ModelAndView model = new ModelAndView();
-		if((req.getParameter("byId") == null) || (req.getParameter("keyword") == null)) {
+		if ((req.getParameter("byId") == null) || (req.getParameter("keyword") == null)) {
 			returnIndex(model);
 			model.addObject("message", "Check search parameters");
 			return model;
 		}
-		List<Contact> searchContactResults = new ArrayList<Contact> ();
-		List<Balance> searchBalanceResults = new ArrayList<Balance> ();
-		if(req.getParameter("byId").contentEquals("id")) {
+		List<Contact> searchContactResults = new ArrayList<Contact>();
+		List<Balance> searchBalanceResults = new ArrayList<Balance>();
+		if (req.getParameter("byId").contentEquals("id")) {
 			Balance balance = balanceService.get(Integer.parseInt(req.getParameter("keyword")));
 			searchContactResults.add(service.searchById(req.getParameter("keyword")));
 			searchBalanceResults.add(balance);

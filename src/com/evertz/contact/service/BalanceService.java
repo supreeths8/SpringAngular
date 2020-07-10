@@ -16,30 +16,30 @@ import com.evertz.contact.model.Contact;
 
 @Service
 public class BalanceService {
-	
+
 	@Autowired
 	private BalanceRepository balanceRepo;
-	
+
 	@Transactional
 	public List<Balance> listAll() {
-		return (List<Balance>) balanceRepo.findAll();	
+		return (List<Balance>) balanceRepo.findAll();
 	}
-	
+
 	@Transactional
 	public void save(Balance balance) {
 		balanceRepo.save(balance);
 	}
-	
+
 	public Balance get(int id) {
 		Optional<Balance> result = balanceRepo.findById(id);
 		return result.get();
 	}
-	
+
 	public void delete(int id) {
 		balanceRepo.deleteById(id);
-		
+
 	}
-	
+
 //	try {
 //		float withdrawAmount = Float.parseFloat(req.getParameter("withdrawAmount"));
 //		ModelAndView model = new ModelAndView();
@@ -61,19 +61,33 @@ public class BalanceService {
 //			model.setViewName("userview");
 //			return model;
 //		}
-	
+
 	public int withdrawl(Balance balance, float toWithdraw, HttpSession userSession) {
 		int flag = 0;
-		if((balance.getAmount() - toWithdraw) >= 0) {
+		if ((balance.getAmount() - toWithdraw) >= 0) {
 			flag = 1;
-			balance.setAmount((balance.getAmount()-toWithdraw));
+			balance.setAmount((balance.getAmount() - toWithdraw));
 			userSession.setAttribute("userBalance", balance);
 			save(balance);
 			return flag;
-		}
-		else {
+		} else {
 			return flag;
 		}
+	}
+
+	public int withdrawl(Balance balance, float toWithdraw) {
+		int flag = 0;
+		if ((balance.getAmount() - toWithdraw) >= 0) {
+			flag = 1;
+			balance.setAmount((balance.getAmount() - toWithdraw));
+			save(balance);
+		}
+		return flag;
+	}
+	
+	public void deposit(Balance balance, float toDeposit) {
+		balance.setAmount((balance.getAmount() + toDeposit));
+		save(balance);
 	}
 
 }
