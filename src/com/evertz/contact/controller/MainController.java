@@ -77,11 +77,11 @@ public class MainController {
 		return ResponseEntity.ok().body(list);
 	}
 
-	@RequestMapping(value = "/save", method = RequestMethod.POST)
+	@PostMapping("/save")
 	public ResponseEntity<?> save(@RequestBody Contact contact) {
 		service.save(contact);
 		balanceService.save(new Balance());
-		return ResponseEntity.ok().body("SAVED");
+		return ResponseEntity.ok().build();
 	}
 
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
